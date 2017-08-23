@@ -3,7 +3,7 @@ var Container = PIXI.Container, autoDetectRenderer = PIXI.autoDetectRenderer, lo
 TextureCache = PIXI.utils.TextureCache
 Rectangle = PIXI.Rectangle
 
-var hA, h2, h3, h4, h5, h6, h7, h8, h9, hT, hJ, hQ, hK;
+var sprites = {}
 var texture
 
 // Create a Pixi stage and renderer and add the
@@ -19,14 +19,15 @@ function setup() {
 	// Create the sprites, add it to the stage, and render it
 	texture = TextureCache["cards.png"];
 	
-	hA=createCard(1,1);
-	h2=createCard(8,1);
-	h3=createCard(3,1);
+	sprites[1] = createCard(1,1);
+//	sprites[2] = createCard(2,1);
+//	sprites[3] = createCard(3,1);
+	
 	// TODO add other cards
-
-	stage.addChild(hA);
-	stage.addChild(h2);
-	stage.addChild(h3);
+ 
+	stage.addChild(sprites[1]);
+//	stage.addChild(sprites[2]);
+//	stage.addChild(sprites[3]);
 
 	gameLoop();
 }
@@ -54,8 +55,12 @@ function play() {
 
 function createCard(value, suit) {
 
+	texture = TextureCache["cards.png"];
+	
 	//set the bounds from texture atlas
-	texture.frame = new Rectangle((value-1) * 44, (suit-1) * 63, 44, 63);
+	var rectangle = new Rectangle((value-1) * 44, (suit-1) * 63, 44, 63);
+	texture.frame = rectangle;
+	console.log(texture.frame);
 
 	// create our little card friend..
 	var card = new Sprite(texture);
@@ -72,27 +77,15 @@ function createCard(value, suit) {
 	card.anchor.set(0.5);
 
 
-	// setup events for mouse + touch using
-	// the pointer events
+	
 	card
-//	.on('pointerdown', onDragStart)
-//	.on('pointerup', onDragEnd)
-//	.on('pointerupoutside', onDragEnd)
-//	.on('pointermove', onDragMove);
-
-	// For mouse-only events
 	 .on('mousedown', onDragStart)
 	 .on('mouseup', onDragEnd)
 	 .on('mouseupoutside', onDragEnd)
 	 .on('mousemove', onDragMove);
 
-	// For touch-only events
-	// .on('touchstart', onDragStart)
-	// .on('touchend', onDragEnd)
-	// .on('touchendoutside', onDragEnd)
-	// .on('touchmove', onDragMove);
 
-//	// move the sprite to its designated position
+	// move the sprite to its designated position
 	card.x = randomInt(0,1000);
 	card.y = randomInt(0,500);
 	
@@ -121,7 +114,7 @@ function onDragEnd() {
 	
 	var finalPosition = this.data.getLocalPosition(this.parent);
 	
-	var message = JSON.stringify({'id':1, 'x':50, 'y':50});
+	var message = JSON.stringify({'id':1, 'x':finalPosition.x, 'y':finalPosition.y});
 	sendAction(message);
 	
 	// set the interaction data to null
@@ -136,6 +129,13 @@ function onDragMove() {
 		this.x = newPosition.x;
 		this.y = newPosition.y;
 	}
+}
+
+function updateGame(message) {
+	message.sprites.forEach(function(entry) {
+	    sprites[entry.id].x = entry.x;
+	    sprites[entry.id].y = entry.y;
+	});
 }
 
 //The `randomInt` helper function
