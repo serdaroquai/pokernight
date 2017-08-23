@@ -3,6 +3,8 @@ var Container = PIXI.Container, autoDetectRenderer = PIXI.autoDetectRenderer, lo
 TextureCache = PIXI.utils.TextureCache
 Rectangle = PIXI.Rectangle
 
+const ticker = new PIXI.ticker.Ticker();
+
 var sprites = {}
 var texture
 
@@ -133,6 +135,17 @@ function onDragMove() {
 
 function updateGame(message) {
 	message.sprites.forEach(function(entry) {
+//		ticker.add(function() {
+//
+//			var id = entry.id;
+//			
+//			sprites[id].x += (entry.x - sprites[id].x) * 0.1;
+//			sprites[id].y += (entry.y - sprites[id].y) * 0.1;
+//
+//		    if (Math.abs(sprites[entryid].x - entry.x) < 1) {
+//		        reset();
+//		    }
+//		});
 	    sprites[entry.id].x = entry.x;
 	    sprites[entry.id].y = entry.y;
 	});
