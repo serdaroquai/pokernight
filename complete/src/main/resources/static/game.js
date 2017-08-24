@@ -94,6 +94,22 @@ function createCard(value, suit) {
 	return card;
 }
 
+function createDragAndDropFor(target){  
+	  target.interactive = true;
+	  target.on("mousedown", function(e){
+	    drag = target;
+	  })
+	  target.on("mouseup", function(e){
+	    drag = false;
+	  })
+	  target.on("mousemove", function(e){
+	    if(drag){
+	      drag.position.x += e.data.originalEvent.movementX;
+	      drag.position.y += e.data.originalEvent.movementY;
+	    }
+	  })
+	}
+
 function onDragStart(event) {
 	// store a reference to the data
 	// the reason for this is because of multitouch
