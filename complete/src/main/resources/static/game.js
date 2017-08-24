@@ -17,17 +17,25 @@ $('#stage').append(renderer.view);
 loader.add("cards.png").load(setup);
 
 function setup() {
+	
+	// connect to server
+	connect();
 
 	// Create the sprites, add it to the stage, and render it
 	texture = TextureCache["cards.png"];
+	var rectangle = new Rectangle(0, 0, 44, 63);
+	texture.frame = rectangle;
 	
-	sprites[1] = createCard(1,1);
+	var card = new GameObject(texture,1);
+	makeDraggable(card);
+	
+	sprites[card.id] = card;
 //	sprites[2] = createCard(2,1);
 //	sprites[3] = createCard(3,1);
 	
 	// TODO add other cards
  
-	stage.addChild(sprites[1]);
+	stage.addChild(card);
 //	stage.addChild(sprites[2]);
 //	stage.addChild(sprites[3]);
 
@@ -94,63 +102,9 @@ function createCard(value, suit) {
 	return card;
 }
 
-function createDragAndDropFor(target){  
-	  target.interactive = true;
-	  target.on("mousedown", function(e){
-	    drag = target;
-	  })
-	  target.on("mouseup", function(e){
-	    drag = false;
-	  })
-	  target.on("mousemove", function(e){
-	    if(drag){
-	      drag.position.x += e.data.originalEvent.movementX;
-	      drag.position.y += e.data.originalEvent.movementY;
-	    }
-	  })
-	}
-
-function onDragStart(event) {
-	// store a reference to the data
-	// the reason for this is because of multitouch
-	// we want to track the movement of this particular touch
-	
-	console.log(event);
-	
-	this.data = event.data;
-	this.alpha = 0.5;
-	this.dragging = true;
-}
-
-function onDragEnd() {
-	
-	console.log(JSON.stringify(this.data));
-	
-	this.alpha = 1;
-	this.dragging = false;
-
-	
-	var finalPosition = this.data.getLocalPosition(this.parent);
-	
-	var message = JSON.stringify({'id':1, 'x':finalPosition.x, 'y':finalPosition.y});
-	sendAction(message);
-	
-	// set the interaction data to null
-	this.data = null;
-	
-}
-
-
-function onDragMove() {
-	if (this.dragging) {
-		var newPosition = this.data.getLocalPosition(this.parent);
-		this.x = newPosition.x;
-		this.y = newPosition.y;
-	}
-}
 
 function updateGame(message) {
-	message.sprites.forEach(function(entry) {
+	message.sprites.forEach(function(gameObject) {
 //		ticker.add(function() {
 //
 //			var id = entry.id;
@@ -162,8 +116,8 @@ function updateGame(message) {
 //		        reset();
 //		    }
 //		});
-	    sprites[entry.id].x = entry.x;
-	    sprites[entry.id].y = entry.y;
+	    sprites[gameObject.id].x = gameObject.x;
+	    sprites[gameObject.id].y = gameObject.y;
 	});
 }
 
