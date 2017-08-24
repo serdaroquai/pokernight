@@ -26,7 +26,7 @@ function setup() {
 	var rectangle = new Rectangle(0, 0, 44, 63);
 	texture.frame = rectangle;
 	
-	var card = new GameObject(texture,1);
+	var card = new GameObject(texture,randomInt(1,3));
 	makeDraggable(card);
 	
 	sprites[card.id] = card;
@@ -63,61 +63,19 @@ function play() {
 	
 }
 
-function createCard(value, suit) {
-
-	texture = TextureCache["cards.png"];
-	
-	//set the bounds from texture atlas
-	var rectangle = new Rectangle((value-1) * 44, (suit-1) * 63, 44, 63);
-	texture.frame = rectangle;
-	console.log(texture.frame);
-
-	// create our little card friend..
-	var card = new Sprite(texture);
-
-	// enable the card to be interactive... this will allow it to respond to
-	// mouse and touch events
-	card.interactive = true;
-
-	// this button mode will mean the hand cursor appears when you roll over the
-	// card with your mouse
-	card.buttonMode = true;
-
-	// center the card's anchor point
-	card.anchor.set(0.5);
-
-
-	
-	card
-	 .on('mousedown', onDragStart)
-	 .on('mouseup', onDragEnd)
-	 .on('mouseupoutside', onDragEnd)
-	 .on('mousemove', onDragMove);
-
-
-	// move the sprite to its designated position
-	card.x = randomInt(0,1000);
-	card.y = randomInt(0,500);
-	
-	return card;
-}
-
-
 function updateGame(message) {
-	message.sprites.forEach(function(gameObject) {
-//		ticker.add(function() {
-//
-//			var id = entry.id;
-//			
-//			sprites[id].x += (entry.x - sprites[id].x) * 0.1;
-//			sprites[id].y += (entry.y - sprites[id].y) * 0.1;
-//
-//		    if (Math.abs(sprites[entryid].x - entry.x) < 1) {
-//		        reset();
-//		    }
-//		});
-	    sprites[gameObject.id].x = gameObject.x;
-	    sprites[gameObject.id].y = gameObject.y;
+	message.sprites.forEach(function(entry) {
+		
+		if (sprites[entry.id] == null) {
+			//create sprite if it does not exist
+			var card = new GameObject(texture,entry.id);
+			makeDraggable(card);
+			sprites[entry.id] = card;
+			stage.addChild(card);
+		}
+		
+	    sprites[entry.id].position.x = entry.x;
+	    sprites[entry.id].position.y = entry.y;
 	});
 }
 

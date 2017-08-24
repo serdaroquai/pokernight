@@ -23,7 +23,7 @@ function onDragEnd() {
 	
 	var finalPosition = this.data.getLocalPosition(this.parent);
 	
-	var message = JSON.stringify({'id':1, 'x':finalPosition.x, 'y':finalPosition.y});
+	var message = JSON.stringify({'id':this.id, 'x':finalPosition.x, 'y':finalPosition.y});
 	
 	// send server wtf is going on
 	sendAction(message);

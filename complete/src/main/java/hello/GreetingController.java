@@ -32,7 +32,7 @@ public class GreetingController {
 		
 		// initialize game
 		sprites = new HashMap<Integer,Sprite>();
-		for (int i=1;i<2;i++) {
+		for (int i=1;i<4;i++) {
 			Sprite sprite = new Sprite(i, i*50, i*50, false);
 			sprites.put(sprite.getId(), sprite);
 		}
