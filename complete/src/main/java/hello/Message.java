@@ -3,7 +3,8 @@ package hello;
 public class Message {
     
     private int id;
-    private int x;
+
+	private int x;
     private int y;
 
     public Message() {    }
@@ -32,6 +33,10 @@ public class Message {
 		this.y = y;
 	}
     
+    @Override
+    public String toString() {
+    	return "Message [id=" + id + ", x=" + x + ", y=" + y + "]";
+    }
 }
 
    

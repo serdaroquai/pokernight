@@ -1,26 +1,17 @@
 var stompClient = null;
-
-function setConnected(connected) {
-    $("#connect").prop("disabled", connected);
-    $("#disconnect").prop("disabled", !connected);
-    if (connected) {
-        $("#conversation").show();
-    }
-    else {
-        $("#conversation").hide();
-    }
-    $("#greetings").html("");
-}
+var name = getURLParameter("name"); // playerName
 
 function connect() {
-    var socket = new SockJS('/gs-guide-websocket');
+    var socket = new SockJS('/pokerNight');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
-        setConnected(true);
         console.log('Connected: ' + frame);
         stompClient.subscribe('/topic/greetings', function (greeting) {
-            showGreeting(JSON.parse(greeting.body));
+        	updateGame(JSON.parse(greeting.body));
         });
+//        stompClient.subscribe('/topic/greetings', function (greeting) {
+//        	updateGame(JSON.parse(greeting.body));
+//        });
     });
 }
 
@@ -28,7 +19,6 @@ function disconnect() {
     if (stompClient != null) {
         stompClient.disconnect();
     }
-    setConnected(false);
     console.log("Disconnected");
 }
 
@@ -38,17 +28,8 @@ function sendAction(action) {
 	stompClient.send("/app/hello", {}, action);
 }
 
-function showGreeting(message) {
-	updateGame(message);
-//    $("#greetings").append("<tr><td>" + message + "</td></tr>");
+function getURLParameter(name) {
+	return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
 }
 
-$(function () {
-    $("form").on('submit', function (e) {
-        e.preventDefault();
-    });
-    $( "#connect" ).click(function() { connect(); });
-    $( "#disconnect" ).click(function() { disconnect(); });
-    $( "#send" ).click(function() { sendAction(JSON.stringify({'name': $("#name").val()})); });
-});
 

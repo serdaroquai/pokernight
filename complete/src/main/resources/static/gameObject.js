@@ -1,4 +1,5 @@
 function GameObject(texture, id) {
+	
 	PIXI.Sprite.call(this, texture);
   
 	this.position.x = 0;
