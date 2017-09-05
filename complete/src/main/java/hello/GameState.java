@@ -42,4 +42,13 @@ public class GameState {
     		sprite.setY(message.getY());
 		}
 	}
+	
+	public void registerPlayer(String sessionId) {
+		// todo add a private player area sprite moveable only by player
+		
+	}
+	
+	public void unregisterPlayer(String sessionId) {
+		// todo remove private player area sprite 
+	}
 }

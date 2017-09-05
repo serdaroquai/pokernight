@@ -1,18 +1,11 @@
 package hello;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 
 @Component
 public class MessageConsumer{
@@ -36,7 +29,11 @@ public class MessageConsumer{
 				
 		    	gameState.update(message);
 		    	
-				template.convertAndSend("/topic/greetings", gameState.toMessage());
+				//send public state update
+				template.convertAndSend("/topic/public", gameState.toMessage());
+
+				//send private message to original sender
+				template.convertAndSendToUser(message.getUsername(), "/queue/private", gameState.toMessage());
 				
 			} catch (InterruptedException e) {
 				e.printStackTrace();

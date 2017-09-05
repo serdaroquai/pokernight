@@ -1,6 +1,6 @@
 package hello;
 
-import java.util.ArrayList;
+import java.security.Principal;
 import java.util.concurrent.BlockingQueue;
 
 import javax.annotation.PostConstruct;
@@ -8,6 +8,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.socket.messaging.SessionSubscribeEvent;
@@ -37,19 +38,34 @@ public class GreetingController {
 		
 	}
 	
-    @MessageMapping("/hello")
-//    @SendTo("/topic/greetings")
-    public void greeting(Message message) throws Exception {
+    @MessageMapping("/message")
+//    @SendTo("/topic/public")
+    public void greeting(@Payload Message message, Principal principal) throws Exception {
         
+    	//record who sends the message
+    	message.setUsername(principal.getName());
     	messageQueue.put(message);
-    	System.out.println("Registering " + message);
+    	
+    	System.out.println("Registered " + message);
     	
     }
+    
+//    @SubscribeMapping("/user/{userId}")
+//    public void init(@DestinationVariable String userId) {
+//    	System.out.println(userId); 
+//    }
 
 	@EventListener
     public void handleSubscribeEvent(SessionSubscribeEvent event) {
+		
+		// register new player by simple session id
+//		String stompSessionId = (String) event.getMessage().getHeaders().get("simpSessionId");
+//		String user = event.getUser().getName();
+		
 		// send initial state of game board
-		template.convertAndSend("/topic/greetings", gameState.toMessage());
+		template.convertAndSend("/topic/public", gameState.toMessage());
+		
 	}
+	
 }
 

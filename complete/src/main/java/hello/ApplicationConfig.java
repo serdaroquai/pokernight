@@ -26,6 +26,7 @@ public class ApplicationConfig extends AbstractWebSocketMessageBrokerConfigurer 
     public void configureMessageBroker(MessageBrokerRegistry config) {
         config.enableSimpleBroker("/topic", "/queue");
         config.setApplicationDestinationPrefixes("/app");
+        config.setUserDestinationPrefix("/user");
     }
 
     @Override
