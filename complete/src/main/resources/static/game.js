@@ -23,19 +23,6 @@ function setup() {
 	texture = TextureCache["cards.png"];
 	var rectangle = new Rectangle(0, 0, 44, 63);
 	texture.frame = rectangle;
-	
-//	var card = new GameObject(texture,randomInt(1,3));
-//	makeDraggable(card);
-	
-//	sprites[card.id] = card;
-//	sprites[2] = createCard(2,1);
-//	sprites[3] = createCard(3,1);
-	
-	// TODO add other cards
- 
-//	stage.addChild(card);
-//	stage.addChild(sprites[2]);
-//	stage.addChild(sprites[3]);
 
 	// connect to server
 	connect();

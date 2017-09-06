@@ -3,7 +3,7 @@ package hello;
 public class Message {
     
 	private String username;
-	private int id;
+	private String id;
 
 	private int x;
     private int y;
@@ -19,11 +19,11 @@ public class Message {
 		this.username = username;
 	}
     
-    public int getId() {
+    public String getId() {
 		return id;
 	}
     
-    public void setId(int id) {
+    public void setId(String id) {
 		this.id = id;
 	}
     
