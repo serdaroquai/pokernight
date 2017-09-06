@@ -14,15 +14,16 @@ var stage = new Container(), renderer = autoDetectRenderer(512, 512);
 $('#stage').append(renderer.view);
 
 // load an image and run the `setup` function when it's done
-loader.add("cards.png").load(setup);
+//loader.add("cards.png").load(setup);
+loader.add("sprites.json").load(setup);
 
 function setup() {
 	
 
 	// Create the sprites, add it to the stage, and render it
-	texture = TextureCache["cards.png"];
-	var rectangle = new Rectangle(0, 0, 44, 63);
-	texture.frame = rectangle;
+//	texture = TextureCache["cards.png"];
+//	var rectangle = new Rectangle(0, 0, 44, 63);
+//	texture.frame = rectangle;
 
 	// connect to server
 	connect();
@@ -59,7 +60,7 @@ function updateGame(message) {
 		
 		if (sprites[entry.id] == null) {
 			//create sprite if it does not exist
-			var card = new GameObject(texture,entry.id);
+			var card = new GameObject(entry.texture,entry.id);
 			makeDraggable(card);
 			sprites[entry.id] = card;
 			stage.addChild(card);
@@ -68,6 +69,7 @@ function updateGame(message) {
 		// and update their location
 		sprites[entry.id].position.x = entry.x;
 		sprites[entry.id].position.y = entry.y;
+		//todo update their texture
 		
 		
 	});

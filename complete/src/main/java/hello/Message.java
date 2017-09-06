@@ -7,9 +7,17 @@ public class Message {
 
 	private int x;
     private int y;
+    private boolean ctrlDown;
 
     public Message() {    }
     
+    public boolean isCtrlDown() {
+		return ctrlDown;
+	}
+    
+    public void setCtrlDown(boolean ctrlDown) {
+		this.ctrlDown = ctrlDown;
+	}
     
     public String getUsername() {
 		return username;

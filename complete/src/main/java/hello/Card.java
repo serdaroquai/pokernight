@@ -14,6 +14,7 @@ public class Card implements IsSprite{
 		
 		this.suit = suit;
 		this.rank = rank;
+		faceDown = true;
 	}
 
 	public Sprite getSprite() {
@@ -35,7 +36,7 @@ public class Card implements IsSprite{
 
 	@Override
 	public String getTexture() {
-		return isFaceDown() ? "card" : String.format("%s%s", ranks[rank], suits[suit]);
+		return isFaceDown() ? "card.png" : String.format("%s%s.png", ranks[rank], suits[suit]);
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 function GameObject(texture, id) {
 	
-	PIXI.Sprite.call(this, texture);
+	PIXI.Sprite.call(this, TextureCache[texture]);
   
 	this.position.x = 0;
 	this.position.y = 0;
