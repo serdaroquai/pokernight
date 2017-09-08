@@ -3,7 +3,19 @@ function makeDraggable(target){
 	target.interactive = true;
 	target.buttonMode = true;
 	target.anchor.set(0.5);
-	target.on('mousedown', onDragStart).on('mouseup', onDragEnd).on('mouseupoutside', onDragEnd).on('mousemove', onDragMove);	
+	target.on('mousedown', onDragStart).on('mouseup', onDragEnd).on('mouseupoutside', onDragEnd).on('mousemove', onDragMove).on('rightclick', onRightClick);	
+}
+
+function onRightClick(event) {
+
+	var message = {
+			'id':this.id, 
+			'rightClick':true
+			}
+	
+	// send server wtf is going on
+	sendAction(JSON.stringify(message));
+	
 }
 
 function onDragStart(event) {

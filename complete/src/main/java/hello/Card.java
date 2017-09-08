@@ -31,7 +31,7 @@ public class Card implements IsSprite{
 	
 	@Override
 	public String toString() {
-		return String.format("Card[%s%s]", ranks[rank], suits[suit] );
+		return String.format("Card[%s%s],isFaceDown:%s", ranks[rank], suits[suit], faceDown);
 	}
 
 	@Override
@@ -52,5 +52,9 @@ public class Card implements IsSprite{
 	@Override
 	public String getId() {
 		return sprite.getId();
+	}
+	
+	public void flip() {
+		faceDown = !faceDown;
 	}
 }

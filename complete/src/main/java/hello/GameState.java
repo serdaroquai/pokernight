@@ -72,9 +72,14 @@ public class GameState {
 
 		// todo proper validations
 		
-		Sprite movedSprite = sprites.get(message.getId());
+		Sprite targetSprite = sprites.get(message.getId());
 		
-		if (deck.getSprite().equals(movedSprite)) {
+		if (message.isRightClick() && !deck.getSprite().equals(targetSprite)) {
+			// right click a card
+			Card card = (Card) targetSprite.getGameObject();
+			card.flip();
+			
+		} else if (deck.getSprite().equals(targetSprite)) {
 			// drawing a card from deck
 			
 			Card card = deck.draw();
@@ -87,8 +92,8 @@ public class GameState {
 			// TODO is ctrl clicked (faceUp face down)
 			
 			// move a card
-			movedSprite.setX(message.getX());
-			movedSprite.setY(message.getY());
+			targetSprite.setX(message.getX());
+			targetSprite.setY(message.getY());
 		}
 		
 //		synchronized (sprites) {
@@ -99,11 +104,11 @@ public class GameState {
 	}
 	
 	public void registerPlayer(String sessionId) {
-		// todo add a private player area sprite moveable only by player
+		// TODO add a private player area sprite moveable only by player
 		
 	}
 	
 	public void unregisterPlayer(String sessionId) {
-		// todo remove private player area sprite 
+		// TODO remove private player area sprite 
 	}
 }

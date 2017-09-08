@@ -5,18 +5,18 @@ public class Message {
 	private String username;
 	private String id;
 
-	private int x;
-    private int y;
-    private boolean ctrlDown;
+	private Integer x;
+    private Integer y;
+    private boolean rightClick;
 
     public Message() {    }
     
-    public boolean isCtrlDown() {
-		return ctrlDown;
+    public boolean isRightClick() {
+		return rightClick;
 	}
     
-    public void setCtrlDown(boolean ctrlDown) {
-		this.ctrlDown = ctrlDown;
+    public void setRightClick(boolean rightClick) {
+		this.rightClick = rightClick;
 	}
     
     public String getUsername() {
@@ -35,19 +35,19 @@ public class Message {
 		this.id = id;
 	}
     
-    public int getX() {
+    public Integer getX() {
 		return x;
 	}
     
-    public int getY() {
+    public Integer  getY() {
 		return y;
 	}
     
-    public void setX(int x) {
+    public void setX(Integer x) {
 		this.x = x;
 	}
     
-    public void setY(int y) {
+    public void setY(Integer y) {
 		this.y = y;
 	}
     

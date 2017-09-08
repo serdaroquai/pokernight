@@ -1,25 +1,25 @@
 package hello;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class Sprite implements IsSprite{
 
 	private String id;
 	private int x;
 	private int y;
-	private String texture;
 	
-	public Sprite(String id, int x, int y, String texture) {
+	@JsonIgnore
+	private IsSprite gameObject;
+	
+	public Sprite(String id, int x, int y, IsSprite gameObject) {
 		this.id = id;
 		this.x = x;
 		this.y = y;
-		this.texture = texture;
+		this.gameObject = gameObject;
 	}
 	
 	public String getTexture() {
-		return texture;
-	}
-	
-	public void setTexture(String texture) {
-		this.texture = texture;
+		return getGameObject().getTexture();
 	}
 	
 	public String getId() {
@@ -46,8 +46,12 @@ public class Sprite implements IsSprite{
 		this.y = y;
 	}
 	
-	public static Sprite from(IsSprite hasTexture, int x, int y) {
-		return new Sprite(GameState.generateId(), x, y, hasTexture.getTexture());
+	public IsSprite getGameObject() {
+		return gameObject;
+	}
+	
+	public static Sprite from(IsSprite isSprite, int x, int y) {
+		return new Sprite(GameState.generateId(), x, y, isSprite);
 	}
 
 	@Override

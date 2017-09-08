@@ -16,6 +16,7 @@ $('#stage').append(renderer.view);
 // load an image and run the `setup` function when it's done
 //loader.add("cards.png").load(setup);
 loader.add("sprites.json").load(setup);
+$('body').on('contextmenu', '#stage', function(e){ return false; });
 
 function setup() {
 	
@@ -69,7 +70,7 @@ function updateGame(message) {
 		// and update their location
 		sprites[entry.id].position.x = entry.x;
 		sprites[entry.id].position.y = entry.y;
-		//todo update their texture
+		sprites[entry.id].texture = TextureCache[entry.texture];
 		
 		
 	});
