@@ -20,12 +20,6 @@ $('body').on('contextmenu', '#stage', function(e){ return false; });
 
 function setup() {
 	
-
-	// Create the sprites, add it to the stage, and render it
-//	texture = TextureCache["cards.png"];
-//	var rectangle = new Rectangle(0, 0, 44, 63);
-//	texture.frame = rectangle;
-
 	// connect to server
 	connect();
 	
@@ -55,25 +49,34 @@ function play() {
 }
 
 function updateGame(message) {
-	// todo destory non existent sprites
+	
+	// iterate through the existing sprites to get rid of outdated ones,
+	// todo open for improvement
+	for (var key in sprites) {
+		stage.removeChild(sprites[key]);
+	}
+	sprites = {};
 	
 	message.sprites.forEach(function(entry) {
 		
 		if (sprites[entry.id] == null) {
 			//create sprite if it does not exist
-			var card = new GameObject(entry.texture,entry.id);
-			makeDraggable(card);
-			sprites[entry.id] = card;
-			stage.addChild(card);
+			var gameObject = new GameObject(entry.texture,entry.id);
+			makeDraggable(gameObject);
+			sprites[entry.id] = gameObject;
+			stage.addChild(gameObject);
 		}
 		
-		// and update their location
+		// and update their location and texture
 		sprites[entry.id].position.x = entry.x;
 		sprites[entry.id].position.y = entry.y;
 		sprites[entry.id].texture = TextureCache[entry.texture];
 		
-		
 	});
+	
+	
+
+	
 }
 
 //The `randomInt` helper function

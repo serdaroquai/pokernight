@@ -439,6 +439,46 @@
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":572,"h":315},
 	"sourceSize": {"w":572,"h":315}
+},
+"hand0.png":
+{
+	"frame": {"x":88,"y":252,"w":66,"h":63},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":572,"h":315},
+	"sourceSize": {"w":572,"h":315}
+},
+"hand1.png":
+{
+	"frame": {"x":154,"y":252,"w":66,"h":63},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":572,"h":315},
+	"sourceSize": {"w":572,"h":315}
+},
+"hand2.png":
+{
+	"frame": {"x":220,"y":252,"w":66,"h":63},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":572,"h":315},
+	"sourceSize": {"w":572,"h":315}
+},
+"hand3.png":
+{
+	"frame": {"x":286,"y":252,"w":66,"h":63},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":572,"h":315},
+	"sourceSize": {"w":572,"h":315}
+},
+"button.png":
+{
+	"frame": {"x":352,"y":252,"w":63,"h":63},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":572,"h":315},
+	"sourceSize": {"w":572,"h":315}
 }},
 "meta": {
 	"app": "http://www.codeandweb.com/texturepacker",

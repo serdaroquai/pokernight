@@ -62,6 +62,9 @@ public class GreetingController {
 //		String stompSessionId = (String) event.getMessage().getHeaders().get("simpSessionId");
 //		String user = event.getUser().getName();
 		
+		//register new player
+		gameState.registerPlayer(event.getUser().getName());
+		
 		// send initial state of game board
 		template.convertAndSend("/topic/public", gameState.toMessage());
 		

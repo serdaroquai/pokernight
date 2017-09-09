@@ -37,6 +37,8 @@ public class MessageConsumer{
 				
 			} catch (InterruptedException e) {
 				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 		
