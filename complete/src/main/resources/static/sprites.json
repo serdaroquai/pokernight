@@ -423,6 +423,22 @@
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":572,"h":315},
 	"sourceSize": {"w":572,"h":315}
+},
+"deck.png":
+{
+	"frame": {"x":0,"y":252,"w":44,"h":63},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":572,"h":315},
+	"sourceSize": {"w":572,"h":315}
+},
+"emptyDeck.png":
+{
+	"frame": {"x":44,"y":252,"w":44,"h":63},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":572,"h":315},
+	"sourceSize": {"w":572,"h":315}
 }},
 "meta": {
 	"app": "http://www.codeandweb.com/texturepacker",

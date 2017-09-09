@@ -53,7 +53,7 @@ public class Deck implements IsSprite {
 	
 	@Override
 	public String getTexture() {
-		return isEmpty() ? "emptyDeck.png" : "card.png";
+		return isEmpty() ? "emptyDeck.png" : "deck.png";
 	}
 
 	@Override
