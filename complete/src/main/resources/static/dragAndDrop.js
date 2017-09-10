@@ -26,19 +26,22 @@ function onDragStart(event) {
 	this.data = event.data;
 	this.alpha = 0.5;
 	this.dragging = true;
+	this.xInitial = this.x;
+	this.yInitial = this.y;
 }
 
 function onDragEnd() {
 	
 	this.alpha = 1;
-	this.dragging = false;
 	
-	var finalPosition = this.data.getLocalPosition(this.parent);
+//	var finalPosition = this.data.getLocalPosition(this.parent);
 	
 	var message = {
-			'id':this.id, 
-			'x':finalPosition.x, 
-			'y':finalPosition.y
+			'id':this.id,
+			'xInitial': this.xInitial,
+			'yInitial': this.yInitial,
+			'x':this.x, 
+			'y':this.y
 			}
 	
 	// send server wtf is going on
@@ -46,6 +49,8 @@ function onDragEnd() {
 	
 	// set the interaction data to null
 	this.data = null;
+
+	this.dragging = false;
 	
 }
 

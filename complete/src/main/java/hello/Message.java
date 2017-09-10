@@ -7,6 +7,8 @@ public class Message {
 
 	private Integer x;
     private Integer y;
+    private Integer xInitial;
+    private Integer yInitial;
     private boolean rightClick;
     private boolean welcome;
 
@@ -15,6 +17,21 @@ public class Message {
     
     public boolean isWelcome() {
 		return welcome;
+	}
+    
+    public Integer getxInitial() {
+		return xInitial;
+	}
+    
+    public void setxInitial(Integer xInitial) {
+		this.xInitial = xInitial;
+	}
+    public Integer getyInitial() {
+		return yInitial;
+	}
+    
+    public void setyInitial(Integer yInitial) {
+		this.yInitial = yInitial;
 	}
     
     public void setWelcome(boolean welcome) {
@@ -60,11 +77,16 @@ public class Message {
     public void setY(Integer y) {
 		this.y = y;
 	}
-    
-    @Override
+
+
+	@Override
 	public String toString() {
-		return "Message [username=" + username + ", id=" + id + ", x=" + x + ", y=" + y + "]";
+		return "Message [username=" + username + ", id=" + id + ", x=" + x
+				+ ", y=" + y + ", xInitial=" + xInitial + ", yInitial="
+				+ yInitial + ", rightClick=" + rightClick + ", welcome="
+				+ welcome + "]";
 	}
+    
 }
 
    

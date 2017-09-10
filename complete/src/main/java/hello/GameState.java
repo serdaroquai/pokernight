@@ -125,8 +125,7 @@ public class GameState {
 		
 		Sprite targetSprite = sprites.get(message.getId());
 		Object gameObject = targetSprite.getGameObject();
-		
-		// todo proper validations
+
 		
 		if (message.isRightClick()) {
 			if (gameObject instanceof Card) {
@@ -175,11 +174,33 @@ public class GameState {
 					}
 				}
 				
+				
+				// drop the old cards
+				Player player = (Player) targetSprite.getGameObject();
+				player.removeCardAssociations();
+				
+				// drag the player
 				targetSprite.setX(message.getX());
 				targetSprite.setY(message.getY());
+				
+				// iterate all cards and see if there is a collision at the new position
+				// adopt the collision cards if any
+				for (Sprite sprite : sprites.values()) {
+					if (sprite.getGameObject() instanceof Card 
+							&& !doesCardBelongToOTherPlayer(player.getPlayerName(), (Card) sprite.getGameObject()) 
+							&& collidesWith(targetSprite, sprite)) {
+						player.add((Card) sprite.getGameObject());
+					}
+				}
+				
 			}
 			
 			// drag a card
+//			if (targetSprite.getX() != message.getxInitial() || targetSprite.getY() != message.getyInitial()) {
+//				// outdated move message
+//				return;
+//			}
+			
 			if (gameObject instanceof Card) {
 
 				Card card = (Card) gameObject;
