@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 public class StateUpdateMessage {
 
+	private boolean privateMessage = false;
 	private String content;
     private ArrayList<Sprite> sprites;
 
@@ -25,6 +26,14 @@ public class StateUpdateMessage {
     
     public String getContent() {
 		return content;
+	}
+    
+    public void setPrivateMessage(boolean privateMessage) {
+		this.privateMessage = privateMessage;
+	}
+    
+    public boolean isPrivateMessage() {
+		return privateMessage;
 	}
 
 }

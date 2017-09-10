@@ -15,9 +15,11 @@ function connect() {
         	//TODO updatePrivateGame
         	updateGame(JSON.parse(msg.body));
         });
-//        stompClient.subscribe('/topic/greetings', function (greeting) {
-//        	updateGame(JSON.parse(greeting.body));
-//        });
+        // send server a welcome message to receive upto date status
+    	var message = { 
+    			'welcome':true
+    			}
+    	sendAction(JSON.stringify(message));
     });
 }
 

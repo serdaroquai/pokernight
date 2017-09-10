@@ -37,6 +37,10 @@ public class Player implements IsSprite{
 		return cards.remove(card);
 	}
 	
+	public Set<Card> getCards() {
+		return cards;
+	}
+	
 	public String getPlayerName() {
 		return playerName;
 	}

@@ -2,6 +2,8 @@ package hello;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
@@ -40,6 +42,10 @@ public class GameState {
 		
 	}	
 	
+	public Map<String, Player> getPlayers() {
+		return players;
+	}
+	
 	public static String generateId() {
 		return UUID.randomUUID().toString();
 	}
@@ -72,15 +78,43 @@ public class GameState {
 		
 	}
 	
+	public StateUpdateMessage toPrivateMessage(String userName) {
+    	
+    	StateUpdateMessage stateUpdateMessage = new StateUpdateMessage();
+    	stateUpdateMessage.setPrivateMessage(true);
+    	stateUpdateMessage.setSprites(new ArrayList<Sprite>());
+    	
+    	Player player = players.get(userName);
+    	for (Card card : player.getCards()) {
+    		stateUpdateMessage.getSprites().add(card.getSprite());
+    	}
+
+    	return stateUpdateMessage;
+	}
+	
 	public StateUpdateMessage toMessage() {
 		    	
     	StateUpdateMessage stateUpdateMessage = new StateUpdateMessage();
     	
     	stateUpdateMessage.setSprites(new ArrayList<Sprite>(sprites.values()));
     	
-    	// add player sprites
+    	// add player sprites and note the cards that are private
+    	List<String> privateCardIdList = new ArrayList<String>();
     	for (Player player : players.values()) {
     		stateUpdateMessage.getSprites().add(player.getSprite());
+    		
+    		for (Card card : player.getCards()) {
+    			privateCardIdList.add(card.getId());
+    		}
+    	}
+    	
+    	//remove the cards that are private in the message
+    	Iterator<Sprite> it = stateUpdateMessage.getSprites().iterator();
+    	while (it.hasNext()) {
+    		Sprite sprite = it.next();
+    		if (privateCardIdList.contains(sprite.getId())) {
+    			it.remove();
+    		}
     	}
     	
     	return stateUpdateMessage;
@@ -140,6 +174,9 @@ public class GameState {
 						}
 					}
 				}
+				
+				targetSprite.setX(message.getX());
+				targetSprite.setY(message.getY());
 			}
 			
 			// drag a card

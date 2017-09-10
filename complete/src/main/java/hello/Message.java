@@ -8,8 +8,18 @@ public class Message {
 	private Integer x;
     private Integer y;
     private boolean rightClick;
+    private boolean welcome;
 
     public Message() {    }
+    
+    
+    public boolean isWelcome() {
+		return welcome;
+	}
+    
+    public void setWelcome(boolean welcome) {
+		this.welcome = welcome;
+	}
     
     public boolean isRightClick() {
 		return rightClick;

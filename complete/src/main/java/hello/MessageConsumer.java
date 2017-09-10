@@ -27,13 +27,20 @@ public class MessageConsumer{
 				message = messageQueue.take();
 				System.out.println("Consuming " + message);
 				
-		    	gameState.update(message);
+				if (message.isWelcome()) {
+					//send to latest status
+				} else {
+					gameState.update(message);
+				}
 		    	
 				//send public state update
 				template.convertAndSend("/topic/public", gameState.toMessage());
 
-				//send private message to original sender
-				template.convertAndSendToUser(message.getUsername(), "/queue/private", gameState.toMessage());
+				//send private messages
+				for (Player player : gameState.getPlayers().values()) {
+					String name = player.getPlayerName();
+					template.convertAndSendToUser(name, "/queue/private", gameState.toPrivateMessage(name));					
+				}
 				
 			} catch (InterruptedException e) {
 				e.printStackTrace();

@@ -5,8 +5,9 @@ Rectangle = PIXI.Rectangle
 
 const ticker = new PIXI.ticker.Ticker();
 
-var sprites = {}
-var texture
+var sprites = {};
+var privateSprites = {};
+var texture;
 
 // Create a Pixi stage and renderer and add the
 // renderer.view to the DOM
@@ -52,30 +53,54 @@ function updateGame(message) {
 	
 	// iterate through the existing sprites to get rid of outdated ones,
 	// todo open for improvement
-	for (var key in sprites) {
-		stage.removeChild(sprites[key]);
-	}
-	sprites = {};
 	
-	message.sprites.forEach(function(entry) {
-		
-		if (sprites[entry.id] == null) {
-			//create sprite if it does not exist
-			var gameObject = new GameObject(entry.texture,entry.id);
-			makeDraggable(gameObject);
-			sprites[entry.id] = gameObject;
-			stage.addChild(gameObject);
+	if (message.privateMessage) {
+		for (var key in privateSprites) {
+			stage.removeChild(privateSprites[key]);
 		}
 		
-		// and update their location and texture
-		sprites[entry.id].position.x = entry.x;
-		sprites[entry.id].position.y = entry.y;
-		sprites[entry.id].texture = TextureCache[entry.texture];
+		privateSprites = {};
 		
-	});
-	
-	
-
+		message.sprites.forEach(function(entry) {
+			
+			if (privateSprites[entry.id] == null) {
+				//create sprite if it does not exist
+				var gameObject = new GameObject(entry.texture,entry.id);
+				makeDraggable(gameObject);
+				privateSprites[entry.id] = gameObject;
+				stage.addChild(gameObject);
+			}
+			
+			// and update their location and texture
+			privateSprites[entry.id].position.x = entry.x;
+			privateSprites[entry.id].position.y = entry.y;
+			privateSprites[entry.id].texture = TextureCache[entry.texture];
+			
+		});
+	} else {
+		
+		for (var key in sprites) {
+			stage.removeChild(sprites[key]);
+		}
+		sprites = {};
+		
+		message.sprites.forEach(function(entry) {
+			
+			if (sprites[entry.id] == null) {
+				//create sprite if it does not exist
+				var gameObject = new GameObject(entry.texture,entry.id);
+				makeDraggable(gameObject);
+				sprites[entry.id] = gameObject;
+				stage.addChild(gameObject);
+			}
+			
+			// and update their location and texture
+			sprites[entry.id].position.x = entry.x;
+			sprites[entry.id].position.y = entry.y;
+			sprites[entry.id].texture = TextureCache[entry.texture];
+			
+		});
+	}
 	
 }
 

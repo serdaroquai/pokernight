@@ -39,7 +39,7 @@ public class Card implements IsSprite{
 
 	@Override
 	public String getTexture() {
-		return isFaceDown() ? "card.png" : String.format("%s%s.png", ranks[rank], suits[suit]);
+		return isFaceDown() ? "card.png" : String.format("%s%s.png", ranks[rank], suits[suit]);			
 	}
 
 	@Override
