@@ -5,6 +5,8 @@ import java.util.Set;
 
 public class Player implements IsSprite{
 
+	public static int WIDTH = 66;
+	public static int HEIGHT = 63;
 	private int playerNo;
 	private String playerName;
 	private Sprite sprite;
@@ -13,6 +15,10 @@ public class Player implements IsSprite{
 	public Player(int no, String playerName) {
 		this.playerNo = no;
 		this.playerName = playerName;
+	}
+	
+	public void removeCardAssociations() {
+		this.cards = new HashSet<Card>();
 	}
 	
 	public boolean hasCardWithId(String id) {
@@ -67,4 +73,13 @@ public class Player implements IsSprite{
 		return String.format("hand%s.png", playerNo % GameState.NUMBER_OF_HAND_IMAGES);
 	}
 
+	@Override
+	public int getWidth() {
+		return WIDTH;
+	}
+	
+	@Override
+	public int getHeight() {
+		return HEIGHT;
+	}
 }

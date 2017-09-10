@@ -2,6 +2,9 @@ package hello;
 
 public class Button implements IsSprite{
 
+	public static int WIDTH = 63;
+	public static int HEIGHT = 63;
+	
 	private Sprite sprite;
 	
 	public Sprite getSprite() {
@@ -30,5 +33,15 @@ public class Button implements IsSprite{
 	@Override
 	public String getTexture() {
 		return "button.png";
+	}
+	
+	@Override
+	public int getWidth() {
+		return WIDTH;
+	}
+	
+	@Override
+	public int getHeight() {
+		return HEIGHT;
 	}
 }

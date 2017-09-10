@@ -46,6 +46,16 @@ public class Sprite implements IsSprite{
 		this.y = y;
 	}
 	
+	@Override
+	public int getWidth() {
+		return gameObject.getWidth();
+	}
+	
+	@Override
+	public int getHeight() {
+		return gameObject.getHeight();
+	}
+	
 	public IsSprite getGameObject() {
 		return gameObject;
 	}

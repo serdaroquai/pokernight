@@ -12,6 +12,9 @@ public class Deck implements IsSprite {
 	private Random random;
 	private Sprite sprite;
 
+	public static int WIDTH = 44;
+	public static int HEIGHT = 63;
+	
 	public Deck(Random random) {
 		
 		this.random = random;
@@ -69,6 +72,16 @@ public class Deck implements IsSprite {
 	@Override
 	public String getId() {
 		return sprite.getId();
+	}
+	
+	@Override
+	public int getWidth() {
+		return WIDTH;
+	}
+	
+	@Override
+	public int getHeight() {
+		return HEIGHT;
 	}
 	
 }

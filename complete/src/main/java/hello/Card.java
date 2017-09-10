@@ -7,6 +7,9 @@ public class Card implements IsSprite{
 	private boolean faceDown;
 	private Sprite sprite;
 	
+	public static int WIDTH = 44;
+	public static int HEIGHT = 63;
+	
 	private static String[] suits = {"h","s","d","c"};
 	private static String[] ranks = {"A","2","3","4","5","6","7","8","9","T","J","Q","K"};
 	
@@ -56,5 +59,15 @@ public class Card implements IsSprite{
 	
 	public void flip() {
 		faceDown = !faceDown;
+	}
+	
+	@Override
+	public int getWidth() {
+		return WIDTH;
+	}
+	
+	@Override
+	public int getHeight() {
+		return HEIGHT;
 	}
 }

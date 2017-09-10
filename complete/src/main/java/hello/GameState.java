@@ -14,14 +14,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class GameState {
 
-	private static int BOARD_WIDTH = 512;
-	private static int BOARD_HEIGHT = 512;
-	private static int CARD_WIDTH = 44;
-	private static int CARD_HEIGHT = 63;
-	private static int HAND_WIDTH = 66;
-	private static int HAND_HEIGHT = 63;
-	private static int BUTTON_WIDTH = 63;
-	private static int BUTTON_HEIGHT = 63;
+	public static int BOARD_WIDTH = 512;
+	public static int BOARD_HEIGHT = 512;
 	public static int NUMBER_OF_HAND_IMAGES = 4;
 	
 	// all the sprites on the board
@@ -56,31 +50,26 @@ public class GameState {
 		
 		this.deck = new Deck(random);
 		deck.setSprite(Sprite.from(deck, 
-				BOARD_WIDTH - CARD_WIDTH - 10, 
-				BOARD_HEIGHT - CARD_HEIGHT - 10));
+				BOARD_WIDTH - Deck.WIDTH - 10, 
+				BOARD_HEIGHT - Deck.HEIGHT - 10));
 		
 		// add the deck sprite
 		sprites.put(deck.getId(), deck.getSprite());
 		
 		this.resetButton = new Button();
 		resetButton.setSprite(Sprite.from(resetButton, 
-				BOARD_WIDTH - BUTTON_WIDTH - 10, 
-				BUTTON_HEIGHT + 10));
+				BOARD_WIDTH - Button.WIDTH - 10, 
+				Button.HEIGHT + 10));
 		
 		// add the reset button sprite
 		sprites.put(resetButton.getId(), resetButton.getSprite());
 		
-		// add the player sprites
+		// add the player sprites and reset their card associations
 		for (Player player : players.values()) {
+			player.removeCardAssociations();
 			sprites.put(player.getId(), player.getSprite());
 		}
 		
-		
-//		sprites = new HashMap<Integer,Sprite>();
-//		for (int i=1;i<4;i++) {
-//			Sprite sprite = new Sprite(i, i*50, i*50, false);
-//			sprites.put(sprite.getId(), sprite);
-//		}
 	}
 	
 	public StateUpdateMessage toMessage() {
@@ -101,42 +90,102 @@ public class GameState {
 
 		
 		Sprite targetSprite = sprites.get(message.getId());
+		Object gameObject = targetSprite.getGameObject();
 		
 		// todo proper validations
 		
 		if (message.isRightClick()) {
-			Object gameObject = targetSprite.getGameObject();
 			if (gameObject instanceof Card) {
-				// right click a card
+				// flip a card
+				
 				Card card = (Card) targetSprite.getGameObject();
-				card.flip();
+				if (!doesCardBelongToOTherPlayer(message.getUsername(), card)) {
+					card.flip();					
+				}
 			}
 			if (gameObject instanceof Button) {
 				//reset the game
 				initializeGame();
 			}
-//			} else if (gameObject instanceof Deck) {
-//				//do nothing
-//			} else if (gameObject instanceof Player) {
-//				// do nothing
-//			}
 			
 		} else if (deck.getSprite().equals(targetSprite)) {
-			// drawing a card from deck
+			// draw a card from deck
 			
 			Card card = deck.draw();
 			if (card != null) {
 				card.setSprite(Sprite.from(card, message.getX(), message.getY()));
 				sprites.put(card.getSprite().getId(), card.getSprite());
+				
+				//check if it is handed to a player
+				shouldHandToPlayer(card);
 			}
 			
 		} else {
+				
+			// drag a player 
+			
+			if (gameObject instanceof Player) {
+				
+				if (!((Player) gameObject).getPlayerName().equals(message.getUsername())) {
+					//only the owner can move its own hand
+					return;
+				}
+				
+				for (Player player : players.values()) {
+					if (!player.getPlayerName().equals(message.getUsername())) {
 						
-			// move the game object
-			targetSprite.setX(message.getX());
-			targetSprite.setY(message.getY());
+						if (collidesWith(player, message.getX(), Player.WIDTH, message.getY(), Player.HEIGHT)) {
+							// cant put your hand on another hand
+							return;
+						}
+					}
+				}
+			}
+			
+			// drag a card
+			if (gameObject instanceof Card) {
+
+				Card card = (Card) gameObject;
+				// move the game object
+				if (!doesCardBelongToOTherPlayer(message.getUsername(), card)) {
+					targetSprite.setX(message.getX());
+					targetSprite.setY(message.getY());				
+				}
+				
+				// hand to a player if necessary
+				shouldHandToPlayer(card);
+			}
+			
 		}
 		
+	}
+	
+	private boolean doesCardBelongToOTherPlayer(String playerName, Card card) {
+		for (Player player : players.values()) {
+			if (!player.getPlayerName().equals(playerName)) {
+				if (player.hasCardWithId(card.getId())) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	private void shouldHandToPlayer(Card card) {
+		boolean isHanded = false;
+		for (Player player : players.values()) {
+			
+			// first remove the existing relation if any
+			player.remove(card); 
+			
+			// add upto date relation
+			if (!isHanded && collidesWith(player, card)) {
+				player.add(card);
+				isHanded = true; // only hand to one player
+				
+				//TODO improve here, player 1 has the advantage
+			}
+		}
 	}
 	
 	public void registerPlayer(String userName) {
@@ -145,7 +194,7 @@ public class GameState {
 			
 			// create the player
 			Player player = new Player(playerCount.incrementAndGet(),userName);
-			Sprite playerSprite = Sprite.from(player, player.getPlayerNo()*HAND_WIDTH + 20, player.getPlayerNo() * HAND_HEIGHT + 20);
+			Sprite playerSprite = Sprite.from(player, player.getPlayerNo()*Player.WIDTH + 20, player.getPlayerNo() * Player.HEIGHT + 20);
 			player.setSprite(playerSprite);
 			
 			//add player to player and sprite list
@@ -154,6 +203,23 @@ public class GameState {
 			
 		}
 		
+	}
+	
+	private boolean collidesWith(IsSprite r1, IsSprite r2) {
+		// simple collision check for axis aligned rectangles 
+		return collidesWith(r1, r2.getX(), r2.getWidth(), r2.getY(), r2.getHeight()); 
+	}
+	
+	private boolean collidesWith(IsSprite r1, int x2, int x2Width, int y2, int y2Height){
+		// we have anchors in the middle of the objects
+		return !(x2 > (r1.getX() + r1.getWidth()) || 
+
+		           (x2 + x2Width) < r1.getX() || 
+
+		           y2 > (r1.getY() + r1.getHeight()) ||
+
+		           (y2 + y2Height) < r1.getY());
+
 	}
 	
 	public void unregisterPlayer(String userName) {
