@@ -1,22 +1,22 @@
 package hello;
 
-import java.util.ArrayList;
+import java.util.Map;
 
 
 public class StateUpdateMessage {
 
 	private boolean privateMessage = false;
 	private String content;
-    private ArrayList<Sprite> sprites;
+    private Map<String,Sprite> sprites;
 
     public StateUpdateMessage() {
     }
 
-    public void setSprites(ArrayList<Sprite> sprites) {
+    public void setSprites(Map<String,Sprite> sprites) {
 		this.sprites = sprites;
 	}
     
-    public ArrayList<Sprite> getSprites() {
+    public Map<String,Sprite> getSprites() {
 		return sprites;
 	}
     

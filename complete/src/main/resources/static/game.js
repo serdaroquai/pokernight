@@ -55,14 +55,24 @@ function updateGame(message) {
 	// todo open for improvement
 	
 	if (message.privateMessage) {
+		
+		var tempPrivateSprites = {};
 		for (var key in privateSprites) {
-			stage.removeChild(privateSprites[key]);
+			// remove if it does not exist in message
+			if (message.sprites[key] == null) {
+				stage.removeChild(privateSprites[key]);	
+			} else {
+				tempPrivateSprites[key] = privateSprites[key];
+			}
 		}
 		
-		privateSprites = {};
+		privateSprites = tempPrivateSprites;
+
+		//now create and update the existing
 		
-		message.sprites.forEach(function(entry) {
-			
+		for (var key in message.sprites) {
+			var entry = message.sprites[key];
+
 			if (privateSprites[entry.id] == null) {
 				//create sprite if it does not exist
 				var gameObject = new GameObject(entry.texture,entry.id);
@@ -75,16 +85,25 @@ function updateGame(message) {
 			privateSprites[entry.id].position.x = entry.x;
 			privateSprites[entry.id].position.y = entry.y;
 			privateSprites[entry.id].texture = TextureCache[entry.texture];
-			
-		});
+		}
+		
 	} else {
 		
+		var tempSprites = {};
 		for (var key in sprites) {
-			stage.removeChild(sprites[key]);
+			// remove if it does not exist in message
+			if (message.sprites[key] == null) {
+				stage.removeChild(sprites[key]);				
+			} else {
+				tempSprites[key] = sprites[key];
+			}
 		}
-		sprites = {};
 		
-		message.sprites.forEach(function(entry) {
+		sprites = tempSprites;
+		
+		for (var key in message.sprites) {
+			
+			var entry = message.sprites[key];
 			
 			if (sprites[entry.id] == null) {
 				//create sprite if it does not exist
@@ -98,8 +117,8 @@ function updateGame(message) {
 			sprites[entry.id].position.x = entry.x;
 			sprites[entry.id].position.y = entry.y;
 			sprites[entry.id].texture = TextureCache[entry.texture];
+		}
 			
-		});
 	}
 	
 }

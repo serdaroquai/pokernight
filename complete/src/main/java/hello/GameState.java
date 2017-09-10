@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -82,11 +83,11 @@ public class GameState {
     	
     	StateUpdateMessage stateUpdateMessage = new StateUpdateMessage();
     	stateUpdateMessage.setPrivateMessage(true);
-    	stateUpdateMessage.setSprites(new ArrayList<Sprite>());
+    	stateUpdateMessage.setSprites(new HashMap<String,Sprite>());
     	
     	Player player = players.get(userName);
     	for (Card card : player.getCards()) {
-    		stateUpdateMessage.getSprites().add(card.getSprite());
+    		stateUpdateMessage.getSprites().put(card.getId(),card.getSprite());
     	}
 
     	return stateUpdateMessage;
@@ -96,24 +97,30 @@ public class GameState {
 		    	
     	StateUpdateMessage stateUpdateMessage = new StateUpdateMessage();
     	
-    	stateUpdateMessage.setSprites(new ArrayList<Sprite>(sprites.values()));
+    	Map<String, Sprite> spriteMap = new HashMap<String,Sprite>();
+    	
+    	for (Entry<String, Sprite> entry : sprites.entrySet()) {
+    		spriteMap.put(entry.getKey(), entry.getValue());
+    	}
     	
     	// add player sprites and note the cards that are private
     	List<String> privateCardIdList = new ArrayList<String>();
     	for (Player player : players.values()) {
-    		stateUpdateMessage.getSprites().add(player.getSprite());
+    		spriteMap.put(player.getId(), player.getSprite());
     		
     		for (Card card : player.getCards()) {
     			privateCardIdList.add(card.getId());
     		}
     	}
+    	stateUpdateMessage.setSprites(new HashMap<String,Sprite>());
     	
-    	//remove the cards that are private in the message
-    	Iterator<Sprite> it = stateUpdateMessage.getSprites().iterator();
+    	//dont add the cards that are private in the message
+    	Iterator<Entry<String,Sprite>> it = spriteMap.entrySet().iterator();
+    	
     	while (it.hasNext()) {
-    		Sprite sprite = it.next();
-    		if (privateCardIdList.contains(sprite.getId())) {
-    			it.remove();
+    		Entry<String,Sprite> entry = it.next();
+    		if (!privateCardIdList.contains(entry.getKey())) {
+    			stateUpdateMessage.getSprites().put(entry.getKey(), entry.getValue());
     		}
     	}
     	
