@@ -17,8 +17,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class GameState {
 
-	public static int BOARD_WIDTH = 512;
-	public static int BOARD_HEIGHT = 512;
+	public static int BOARD_WIDTH = 800;
+	public static int BOARD_HEIGHT = 600;
 	public static int NUMBER_OF_HAND_IMAGES = 4;
 	
 	// all the sprites on the board
@@ -153,7 +153,10 @@ public class GameState {
 			
 			Card card = deck.draw();
 			if (card != null) {
-				card.setSprite(Sprite.from(card, message.getX(), message.getY()));
+				card.setSprite(Sprite.from(
+						card, 
+						normalize(message.getX(),BOARD_WIDTH), 
+						normalize(message.getY(),BOARD_HEIGHT)));
 				sprites.put(card.getSprite().getId(), card.getSprite());
 				
 				//check if it is handed to a player
@@ -187,8 +190,8 @@ public class GameState {
 				player.removeCardAssociations();
 				
 				// drag the player
-				targetSprite.setX(message.getX());
-				targetSprite.setY(message.getY());
+				targetSprite.setX(normalize(message.getX(),BOARD_WIDTH));
+				targetSprite.setY(normalize(message.getY(),BOARD_HEIGHT));
 				
 				// iterate all cards and see if there is a collision at the new position
 				// adopt the collision cards if any
@@ -203,18 +206,14 @@ public class GameState {
 			}
 			
 			// drag a card
-//			if (targetSprite.getX() != message.getxInitial() || targetSprite.getY() != message.getyInitial()) {
-//				// outdated move message
-//				return;
-//			}
 			
 			if (gameObject instanceof Card) {
 
 				Card card = (Card) gameObject;
 				// move the game object
 				if (!doesCardBelongToOTherPlayer(message.getUsername(), card)) {
-					targetSprite.setX(message.getX());
-					targetSprite.setY(message.getY());				
+					targetSprite.setX(normalize(message.getX(),BOARD_WIDTH));
+					targetSprite.setY(normalize(message.getY(),BOARD_HEIGHT));				
 				}
 				
 				// hand to a player if necessary
@@ -223,6 +222,16 @@ public class GameState {
 			
 		}
 		
+	}
+	
+	private int normalize(int value, int max) {
+		if (value > max - 10) {
+			return max - 10;			
+		} else if (value < 0) {
+			return 10;
+		} else {
+			return value;
+		}
 	}
 	
 	private boolean doesCardBelongToOTherPlayer(String playerName, Card card) {

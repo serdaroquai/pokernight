@@ -1,53 +1,26 @@
-//Aliases
-var Container = PIXI.Container, autoDetectRenderer = PIXI.autoDetectRenderer, loader = PIXI.loader, resources = PIXI.loader.resources, Sprite = PIXI.Sprite;
-TextureCache = PIXI.utils.TextureCache
-Rectangle = PIXI.Rectangle
+var app = new PIXI.Application(800, 600, {backgroundColor : 0x119911});
+$('#stage').append(app.view);
 
-const ticker = new PIXI.ticker.Ticker();
+//disable right click context menu
+$('body').on('contextmenu', '#stage', function(e){ return false; });
+
+//Aliases
+const TextureCache = PIXI.utils.TextureCache
+
 
 var sprites = {};
 var privateSprites = {};
 var texture;
 
-// Create a Pixi stage and renderer and add the
-// renderer.view to the DOM
-var stage = new Container(), renderer = autoDetectRenderer(512, 512);
-$('#stage').append(renderer.view);
+PIXI.loader.add("sprites.json").load(onAssetsLoaded);
 
-// load an image and run the `setup` function when it's done
-//loader.add("cards.png").load(setup);
-loader.add("sprites.json").load(setup);
-$('body').on('contextmenu', '#stage', function(e){ return false; });
-
-function setup() {
+function onAssetsLoaded() {
 	
 	// connect to server
 	connect();
 	
-	// start the game loop
-	gameLoop();
 }
 
-// Set the game's current state to `play`:
-var state = play;
-
-function gameLoop() {
-
-	// Loop this function at 60 frames per second
-	requestAnimationFrame(gameLoop);
-
-	// Update the current game state:
-	state();
-
-	// Render the stage
-	renderer.render(stage);
-
-}
-
-function play() {
-
-	
-}
 
 function updateGame(message) {
 	
@@ -60,7 +33,7 @@ function updateGame(message) {
 		for (var key in privateSprites) {
 			// remove if it does not exist in message
 			if (message.sprites[key] == null) {
-				stage.removeChild(privateSprites[key]);	
+				app.stage.removeChild(privateSprites[key]);	
 			} else {
 				tempPrivateSprites[key] = privateSprites[key];
 			}
@@ -78,7 +51,7 @@ function updateGame(message) {
 				var gameObject = new GameObject(entry.texture,entry.id);
 				makeDraggable(gameObject);
 				privateSprites[entry.id] = gameObject;
-				stage.addChild(gameObject);
+				app.stage.addChild(gameObject);
 			}
 			
 			// and update their location and texture
@@ -93,7 +66,7 @@ function updateGame(message) {
 		for (var key in sprites) {
 			// remove if it does not exist in message
 			if (message.sprites[key] == null) {
-				stage.removeChild(sprites[key]);				
+				app.stage.removeChild(sprites[key]);				
 			} else {
 				tempSprites[key] = sprites[key];
 			}
@@ -110,20 +83,33 @@ function updateGame(message) {
 				var gameObject = new GameObject(entry.texture,entry.id);
 				makeDraggable(gameObject);
 				sprites[entry.id] = gameObject;
-				stage.addChild(gameObject);
+				app.stage.addChild(gameObject);
 			}
 			
-			// and update their location and texture
 			sprites[entry.id].position.x = entry.x;
 			sprites[entry.id].position.y = entry.y;
 			sprites[entry.id].texture = TextureCache[entry.texture];
+
+//			app.ticker.add(function () {
+//				
+//				var position = sprites[entry.id].position;
+//				
+//				position.x += (entry.x - position.x) * 0.1;
+//				position.y += (entry.y - position.y) * 0.1;
+//
+//			    if (Math.abs(entry.x - position.x) < 1 
+//			    		&& Math.abs(entry.y - position.y) < 1 ) {
+//			    	position.x = entry.x;
+//			    	position.y = entry.y;
+//			    }
+//				
+//			});
+			
 		}
 			
 	}
 	
+	
+	
 }
 
-//The `randomInt` helper function
-function randomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
