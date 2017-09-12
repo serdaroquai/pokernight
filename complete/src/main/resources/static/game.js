@@ -65,10 +65,12 @@ function updateGame(message) {
 				app.stage.addChild(gameObject);
 			} else {
 				
-				privateSprites[entry.id].texture = TextureCache[entry.texture];
+				if (!privateSprites[entry.id].dragging) {
+					privateSprites[entry.id].texture = TextureCache[entry.texture];
+					//animate to new location
+					app.ticker.add(animate(privateSprites[entry.id], entry));					
+				}
 				
-				//animate to new location
-				app.ticker.add(animate(privateSprites[entry.id], entry));
 			}
 		}
 		
@@ -100,11 +102,13 @@ function updateGame(message) {
 				app.stage.addChild(gameObject);
 			} else {
 				
+				// don't update dragging units, since you will have the last say 
+				if (!sprites[entry.id].dragging) {
+					sprites[entry.id].texture = TextureCache[entry.texture];
+					//animate to new location
+					app.ticker.add(animate(sprites[entry.id], entry));
+				}
 
-				sprites[entry.id].texture = TextureCache[entry.texture];
-				
-				//animate to new location
-				app.ticker.add(animate(sprites[entry.id], entry));
 			}
 			
 			
