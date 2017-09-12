@@ -5,6 +5,7 @@ function GameObject(texture, id) {
 	this.position.x = 0;
 	this.position.y = 0;
 	this.id = id;
+	this.displayGroup = defaultLayer;
 }
 
 GameObject.prototype = Object.create(PIXI.Sprite.prototype);

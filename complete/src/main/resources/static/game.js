@@ -14,6 +14,15 @@ var texture;
 
 PIXI.loader.add("sprites.json").load(onAssetsLoaded);
 
+//specify the displayList component
+app.stage.displayList = new PIXI.DisplayList();
+// drag is the top most layer
+var dragLayer = new PIXI.DisplayGroup(2, false);
+var defaultLayer = new PIXI.DisplayGroup(1, function (sprite) {
+    // everything else is ordered by their y indices 
+    sprite.zOrder = -sprite.y;
+});
+
 function onAssetsLoaded() {
 	
 	// connect to server
@@ -51,13 +60,16 @@ function updateGame(message) {
 				var gameObject = new GameObject(entry.texture,entry.id);
 				makeDraggable(gameObject);
 				privateSprites[entry.id] = gameObject;
+				privateSprites[entry.id].position.x = entry.x;
+				privateSprites[entry.id].position.y = entry.y;
 				app.stage.addChild(gameObject);
+			} else {
+				
+				privateSprites[entry.id].texture = TextureCache[entry.texture];
+				
+				//animate to new location
+				app.ticker.add(animate(privateSprites[entry.id], entry));
 			}
-			
-			// and update their location and texture
-			privateSprites[entry.id].position.x = entry.x;
-			privateSprites[entry.id].position.y = entry.y;
-			privateSprites[entry.id].texture = TextureCache[entry.texture];
 		}
 		
 	} else {
@@ -83,33 +95,47 @@ function updateGame(message) {
 				var gameObject = new GameObject(entry.texture,entry.id);
 				makeDraggable(gameObject);
 				sprites[entry.id] = gameObject;
+				sprites[entry.id].position.x = entry.x;
+				sprites[entry.id].position.y = entry.y;
 				app.stage.addChild(gameObject);
+			} else {
+				
+
+				sprites[entry.id].texture = TextureCache[entry.texture];
+				
+				//animate to new location
+				app.ticker.add(animate(sprites[entry.id], entry));
 			}
 			
-			sprites[entry.id].position.x = entry.x;
-			sprites[entry.id].position.y = entry.y;
-			sprites[entry.id].texture = TextureCache[entry.texture];
-
-//			app.ticker.add(function () {
-//				
-//				var position = sprites[entry.id].position;
-//				
-//				position.x += (entry.x - position.x) * 0.1;
-//				position.y += (entry.y - position.y) * 0.1;
-//
-//			    if (Math.abs(entry.x - position.x) < 1 
-//			    		&& Math.abs(entry.y - position.y) < 1 ) {
-//			    	position.x = entry.x;
-//			    	position.y = entry.y;
-//			    }
-//				
-//			});
 			
 		}
 			
 	}
 	
-	
-	
 }
+
+//using a closures to self destroy an animation
+function animate(sprite, entry) {
+		
+	var count = 0;
+    var temp = function () {
+
+    	count++;
+		var position = sprite.position;
+		
+		position.x += (entry.x - position.x) * 0.2;
+		position.y += (entry.y - position.y) * 0.2;
+		
+		//either when u arrive or after one second set to latest position and end animation
+		if ((Math.abs(entry.x - position.x) < 1 && Math.abs(entry.y - position.y) < 1) 
+				|| count > 60) {
+			position.x = entry.x;
+			position.y = entry.y;
+			
+			// end the animation
+			app.ticker.remove(temp);
+		}
+    };
+    return temp;
+};
 
